@@ -109,6 +109,15 @@ An *uninstall* target does a clean removal to prevent conflict with any future p
 $ sudo make uninstall
 ```
 
+### Packaging
+
+Here is how to run the installation for packaging purpose.
+
+```
+FAKETREE=$(mktemp -d)
+fakeroot make DESTDIR=${FAKETREE} PREFIX=/usr LDCONFIG= install
+```
+
 ## Notes / Advice / Known bug
 
 * Write tests in a distinct file but with a similar name to the one you test.
