@@ -30,7 +30,7 @@ uninstall:
 
 demo: example.cc libkaputti.so
 	$(CC) -o example -std=c++17 -Iinclude -L. example.cc -lkaputti -lfmt
-	LD_LIBRARY_PATH=/home/username/foo:. ./example
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:. ./example
 
 demo-post-install: example.cc
 	@bash -c '[[ -r $(PREFIX)/lib/libkaputti.so ]] || ( echo "You need to install Kaputti prior to run this target"; exit 1 )'

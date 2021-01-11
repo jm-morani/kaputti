@@ -123,6 +123,7 @@ fakeroot make DESTDIR=${FAKETREE} PREFIX=/usr LDCONFIG= install
 * Write tests in a distinct file but with a similar name to the one you test.
 * Include "*.specs*" in file names to keep in mind they do specify behaviors.
 * You can compile separately the piece of software to be tested and its tests.
+* If multiple test compilation units, wrap each one into an anonymous namespace.
 * There is already a *main()* function as a part of Kaputti. Don't link yours.
 * With GCC prior to version 9, the line number in failure message is wrong.
 
