@@ -35,19 +35,19 @@ namespace kaputti
 	namespace repr
 	{
 		template<typename T>
-		std::string stringify(const T valeur)
+		inline std::string stringify(const T valeur)
 		{
 			return fmt::format("{}", valeur);
 		}
 
 		template<>
-		std::string stringify(const std::string valeur)
+		inline std::string stringify(const std::string valeur)
 		{
 			return fmt::format("\"{}\"", valeur);
 		}
 
 		template<>
-		std::string stringify(const char *valeur)
+		inline std::string stringify(const char *valeur)
 		{
 			return fmt::format("\"{}\"", valeur);
 		}
