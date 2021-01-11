@@ -1,8 +1,10 @@
 #ifndef KAPUTTI_EXPECT_H_
 #define KAPUTTI_EXPECT_H_
 
+#include <list>
 #include <string>
 #include <iostream>
+#include <forward_list>
 #include <fmt/core.h>
 
 #include <kaputti/failure.h>
@@ -29,6 +31,21 @@ namespace kaputti
 		inline bool equal(const float a, const double b)
 		{
 			return (a == (float)b);
+		}
+
+		template<
+			typename X,
+			typename Y>
+		bool deepequal(const X x, const Y y)
+		{
+			auto ix = x.begin();
+			auto iy = y.begin();
+			for (; ix != x.end() || iy != y.end(); ++ix, ++iy) {
+				if (!equal(*ix, *iy)) {
+					return false;
+				};
+			};
+			return ix == x.end() && iy == y.end();
 		}
 	}
 
@@ -78,6 +95,24 @@ namespace kaputti
 		inline std::string stringify(const T valeur)
 		{
 			return fmt::format("\"{}\"", valeur);
+		}
+
+		template<typename T>
+		std::string stringify_iterable(std::forward_list<T> collection)
+		{
+			std::string s = std::string("[ ");
+			for(auto i: collection)
+				s += stringify(i) + " ";
+			return s + "]";
+		}
+
+		template<typename T>
+		std::string stringify(std::list<T> collection)
+		{
+			std::string s = std::string("[ ");
+			for(auto i: collection)
+				s += stringify(i) + " ";
+			return s + "]";
 		}
 	}
 
@@ -131,15 +166,44 @@ namespace kaputti
 		};
 
 		template<typename T_NOTICED>
+		class Deep
+		{
+			private:
+				Expect<T_NOTICED> *ex;
+
+			public:
+				Deep(Expect<T_NOTICED> *ex) : ex(ex) {};
+
+				template<typename T_EXPECTED>
+				Expect<T_NOTICED> *equal(const T_EXPECTED expected)
+				{
+					if (!test::deepequal(ex->noticed, expected)) {
+						ex->fail(fmt::format("to be deep equal to {}", repr::stringify(expected)));
+					}
+					return ex;
+				};
+
+				template<typename T=int>  // GCC n'arrive pas à découvrir int :-(
+				Expect<T_NOTICED> *equal(std::list<T> expected)
+				{
+					if (!test::deepequal(ex->noticed, expected)) {
+						ex->fail(fmt::format("to be deep equal to {}", repr::stringify(expected)));
+					}
+					return ex;
+				};
+		};
+
+		template<typename T_NOTICED>
 		class To
 		{
 			private:
 				Expect<T_NOTICED> *ex;
 
 			public:
+				Deep<T_NOTICED> deep;
 				Never<T_NOTICED> never;
 
-				To(Expect<T_NOTICED> *ex) : ex(ex), never(ex) {};
+				To(Expect<T_NOTICED> *ex) : ex(ex), deep(ex), never(ex) {};
 
 				template<
 					typename T_EXPECTED,
@@ -159,6 +223,7 @@ namespace kaputti
 		class Expect : public ExpectBase
 		{
 			friend To<T_NOTICED>;
+			friend Deep<T_NOTICED>;
 			friend Never<T_NOTICED>;
 
 			private:

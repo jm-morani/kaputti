@@ -1,5 +1,5 @@
+#include <list>
 #include <string>
-#include <forward_list>
 
 #include <kaputti.h>
 
@@ -41,7 +41,16 @@ describe("Bag", {
     Bag bag;
     bag.append("foo");
     expect(bag.contains("FOO"))
-      ->to.equal(true);  // will fail
+      ->to.equal(true);  // expected to FAIL
+  });
+});
+
+
+std::list<int> lst = { 1, 2, 3, 4, 5 };
+describe("deep equal", {
+  it("should contain same values", {
+    expect(lst)
+      ->to.deep.equal({ 1, 2, 3, 4, 5 });
   });
 });
 
