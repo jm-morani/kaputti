@@ -14,7 +14,7 @@ namespace kaputti
 
 #define KAPUTTI_CONCAT_X(A, B) A ## B
 #define KAPUTTI_CONCAT(A, B) KAPUTTI_CONCAT_X(A, B)
-#define describe(name, behavior) int *KAPUTTI_CONCAT(KAP, __COUNTER__) = kaputti::do_describe(name, []() behavior);
-#define it(name, behavior) int *KAPUTTI_CONCAT(KAP, __COUNTER__) = kaputti::do_it(name, [&]() behavior);
+#define describe(name, behavior) static int *KAPUTTI_CONCAT(KAPD, __COUNTER__) = kaputti::do_describe(name, []() behavior);
+#define it(name, behavior) static int *KAPUTTI_CONCAT(KAPI, __COUNTER__) = kaputti::do_it(name, [&]() behavior);
 
 #endif

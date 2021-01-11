@@ -55,7 +55,7 @@ describe("Bag", {
 With Kaputti already installed, compile and run this example like that:
 
 ```
-$ $(CC) -o example -std=c++17 example.cc -lkaputti -lfmt
+$ g++ -o example -std=c++17 example.cc -lkaputti -lfmt
 $ ./example
 Bag
   should contain the appended item             [ PASS ]
