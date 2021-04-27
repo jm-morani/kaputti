@@ -34,20 +34,48 @@ namespace kaputti
 
 	namespace repr
 	{
-		template<typename T>
+		template<
+			typename T,  // Other
+			typename std::enable_if_t<
+				!std::is_pointer_v<T> &&
+				!std::is_same_v<T, std::string>
+			>* = nullptr
+		>
 		inline std::string stringify(const T valeur)
 		{
 			return fmt::format("{}", valeur);
 		}
 
-		template<>
-		inline std::string stringify(const std::string valeur)
+		template<
+			typename T,  // Raw pointer, except char*
+			typename std::enable_if_t<
+				std::is_pointer_v<T> &&
+				!std::is_same_v<T, char*>
+			>* = nullptr
+		>
+		inline std::string stringify(const T valeur)
+		{
+			return fmt::format("{:#x}", (size_t)valeur);
+		}
+
+		template<
+			typename T,  // std::string
+			typename std::enable_if_t<
+				std::is_same_v<T, std::string>
+			>* = nullptr
+		>
+		inline std::string stringify(const T valeur)
 		{
 			return fmt::format("\"{}\"", valeur);
 		}
 
-		template<>
-		inline std::string stringify(const char *valeur)
+		template<
+			typename T,  // char*
+			typename std::enable_if_t<
+				std::is_same_v<T, char*>
+			>* = nullptr
+		>
+		inline std::string stringify(const T valeur)
 		{
 			return fmt::format("\"{}\"", valeur);
 		}

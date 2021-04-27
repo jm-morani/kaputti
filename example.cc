@@ -44,3 +44,15 @@ describe("Bag", {
       ->to.equal(true);  // will fail
   });
 });
+
+describe("With raw pointers", {
+  describe("not being char*", {
+    it("should compare addresses", {
+      int a;
+      int *b = &a;
+      expect(b)
+        ->to.equal(&a);
+    });
+  });
+});
+
